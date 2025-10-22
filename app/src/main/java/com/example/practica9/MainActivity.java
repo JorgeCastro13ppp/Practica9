@@ -23,14 +23,28 @@ public class MainActivity extends AppCompatActivity {
         peso = findViewById(R.id.editTextNumberDecimalPeso);
 
         botonCalcular = findViewById(R.id.buttonCalcular);
-    }
 
-    protected void onClick(View vista){
-        Intent intento = new Intent(MainActivity.this,MainActivity2.class);
-        intento.putExtra("nombre",nombre.getText().toString());
-        intento.putExtra("altura",altura.getText().toString());
-        intento.putExtra("peso",peso.getText().toString());
+        botonCalcular.setOnClickListener(v->{
+            String n = nombre.getText().toString();
+            String a = altura.getText().toString();
+            String p = peso.getText().toString();
 
-        startActivity(intento);
+            if(!n.isEmpty()&&!a.isEmpty()&&!p.isEmpty()){
+                Intent intento = new Intent(MainActivity.this, MainActivity2.class);
+                intento.putExtra("nombre",n);
+                intento.putExtra("altura",a);
+                intento.putExtra("peso",p);
+                startActivity(intento);
+            }else{
+                if(n.isEmpty()){
+                    nombre.setError("Introduce todos los datos.");
+                }else if(a.isEmpty()){
+                    altura.setError("Introduce todos los datos.");
+                }else if(p.isEmpty()){
+                    peso.setError("Introduce todos los datos.");
+                }
+
+            }
+        });
     }
 }

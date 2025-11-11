@@ -1,5 +1,8 @@
 package com.example.practica9;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -12,6 +15,19 @@ public class MainActivity extends AppCompatActivity {
 
     TextView textPrincipal;
     Button btnCambiarTexto;
+
+    //Nuevo launcher moderno
+    private final ActivityResultLauncher<Intent> launcherEditar =
+            registerForActivityResult(
+                    new ActivityResultContracts.StartActivityForResult(),
+                    result -> {
+                        if(result.getResultCode()== RESULT_OK && result.getData()!=null){
+                            String nuevoTexto = result.getData().getStringExtra("textoNuevo");
+                            textPrincipal.setText(nuevoTexto);
+                        }
+                    }
+
+            );
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,19 +41,11 @@ public class MainActivity extends AppCompatActivity {
             Intent intento1 = new Intent(MainActivity.this,EditarActivity.class);
             //Enviamos el texto actual
             intento1.putExtra("textoActual",textPrincipal.getText().toString());
-            startActivityForResult(intento1,1);
+            launcherEditar.launch(intento1);
         });
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
-        super.onActivityResult(requestCode,resultCode,data);
 
-        if(requestCode==1 && resultCode == RESULT_OK && data!=null){
-            String nuevoTexto = data.getStringExtra("textoNuevo");
-            textPrincipal.setText(nuevoTexto);
-        }
-    }
 
 
 }
